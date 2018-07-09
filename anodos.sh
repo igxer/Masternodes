@@ -12,6 +12,11 @@ CLI_FILE="/usr/local/bin/$CLI_NAME"
 COIN_TGZ="https://github.com/anodoscoin/anodoscoin/releases/download/untagged-27089dbf3e331ce4fe1d/ans-linux.tar.gz"
 COIN_ZIP='ans-linux.tar.gz'
 GITHUB_REPO="https://github.com/anodoscoin/anodoscoin"
+ADDNODE01="addnode = 128.134.184.123:30101"
+ADDNODE02="addnode = 85.121.197.64:30101"
+ADDNODE03="addnode = 86.57.179.243:30101"
+ADDNODE04="addnode = 54.38.231.221:30101"
+ADDNODE05=""
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -255,6 +260,7 @@ function ask_ip()
 
 function create_config() 
 {
+#Script Created by Igxer
   RPCUSER=$(pwgen -s 8 1)
   RPCPASSWORD=$(pwgen -s 15 1)
   cat << EOF > $COINFOLDER/$CONFIG_FILE
@@ -267,10 +273,11 @@ server=1
 daemon=1
 staking=1
 port=$DAEMONPORT
-addnode = 128.134.184.123:30101
-addnode = 85.121.197.64:30101
-addnode = 86.57.179.243:30101
-addnode = 54.38.231.221:30101
+$ADDNODE01
+$ADDNODE02
+$ADDNODE03
+$ADDNODE04
+$ADDNODE05
 EOF
 }
 
@@ -375,20 +382,15 @@ clear
 echo
 echo -e "============================================================================================================="
 echo -e "${GREEN}"
-echo -e "                                    db    88\"\"Yb 888888 88 88\"\"Yb"
-echo -e "                                   dPYb   88__dP 88__   88 88__dP"
-echo -e "                                  dP__Yb  88\"\"\"  88\"\"   88 88\"Yb"  
-echo -e "                                 dP\"\"\"\"Yb 88     888888 88 88  Yb" 
-echo
-echo                          
+echo -e pool.asic.network                       
 echo -e "${NC}"
-echo -e "This script will automate the installation of your APEIRON coin masternode and server configuration by"
+echo -e "This script will automate the installation of your $COIN_NAME coin masternode and server configuration by"
 echo -e "performing the following steps:"
 echo
 echo -e " - Prepare your system with the required dependencies"
-echo -e " - Obtain the latest Apeiron masternode files from the Apeiron GitHub repository"
-echo -e " - Create a user and password to run the Apeiron masternode service"
-echo -e " - Install the Apeiron masternode service under the new user [not root]"
+echo -e " - Obtain the latest Apeiron masternode files from the $COIN_NAME  GitHub repository"
+echo -e " - Create a user and password to run the $COIN_NAME masternode service"
+echo -e " - Install the $COIN_NAME  masternode service under the new user [not root]"
 echo -e " - Add DDoS protection using fail2ban"
 echo -e " - Update the system firewall to only allow; the masternode ports and outgoing connections"
 echo -e " - Rotate and archive the masternode logs to save disk space"
@@ -396,10 +398,7 @@ echo
 echo -e "The script will output ${YELLOW}questions${NC}, ${GREEN}information${NC} and ${RED}errors${NC}"
 echo -e "When finished the script will show a summary of what has been done."
 echo
-echo -e "Script created by click2install"
-echo -e " - GitHub: https://github.com/click2install/apeironcoin"
-echo -e " - Discord: click2install#9625"
-echo -e " - APEIRON: AYFt8nujoqZudztmZXDghpP4JFobg8ssko"
+echo -e "Script created by Igxer"
 echo 
 echo -e "============================================================================================================="
 echo
@@ -419,6 +418,6 @@ elif [[ "$NEW_NODE" == "new" ]]; then
   deploy_binary
   setup_node
 else
-  echo -e "${GREEN}APEIRON daemon already running.${NC}"
+  echo -e "${GREEN}$COIN_NAME daemon already running.${NC}"
   exit 0
 fi
