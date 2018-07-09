@@ -1,11 +1,10 @@
 #!/bin/bash
-
 TMP_FOLDER=$(mktemp -d)
 COIN_NAME='ANODOS [ANS]'
 CONFIG_FILE="ans.conf"
 CONFIGFOLDER='.ans'
 DEFAULTUSER="ans-mn1"
-DEFAULTPORT=30101
+DEFAULTPORT="30101"
 BINARY_NAME="ansd"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
 CLI_NAME="ans-cli"
