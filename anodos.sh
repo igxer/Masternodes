@@ -3,13 +3,15 @@
 TMP_FOLDER=$(mktemp -d)
 COIN_NAME='ANODOS [ANS]'
 CONFIG_FILE="ans.conf"
+CONFIGFOLDER='.ans'
 DEFAULTUSER="ans-mn1"
 DEFAULTPORT=30101
 BINARY_NAME="ansd"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
 CLI_NAME="ans-cli"
 CLI_FILE="/usr/local/bin/$CLI_NAME"
-ANS_DAEMON_ZIP="https://github.com/anodoscoin/anodoscoin/releases/download/untagged-27089dbf3e331ce4fe1d/ans-linux.tar.gz"
+COIN_TGZ="https://github.com/anodoscoin/anodoscoin/releases/download/untagged-27089dbf3e331ce4fe1d/ans-linux.tar.gz"
+COIN_ZIP='ans-linux.tar.gz'
 GITHUB_REPO="https://github.com/anodoscoin/anodoscoin"
 
 RED='\033[0;31m'
@@ -99,14 +101,14 @@ bsdmainutils libdb4.8++-dev libminiupnpc-dev libgmp3-dev ufw fail2ban pkg-config
 function deploy_binary() 
 {
   if [ -f $BINARY_FILE ]; then
-    echo -e "${GREEN}Apeiron daemon binary file already exists, using binary from $BINARY_FILE.${NC}"
+    echo -e "${GREEN}$COIN_NAME daemon binary file already exists, using binary from $BINARY_FILE.${NC}"
   else
     cd $TMP_FOLDER
 
-    echo -e "${GREEN}Downloading $APEIRON_DAEMON_ZIP and deploying the Apeiron service.${NC}"
-    wget $APEIRON_DAEMON_ZIP -O apeiron.zip >/dev/null 2>&1
+    echo -e "${GREEN}Downloading $COIN_ZIP and deploying the $COIN_NAME service.${NC}"
+    wget $COIN_TGZ -O $COIN_ZIP.zip >/dev/null 2>&1
 
-    tar xvzf apeiron.zip >/dev/null 2>&1
+    tar xvzf $COIN_ZIP.zip >/dev/null 2>&1
     cp $BINARY_NAME $CLI_NAME /usr/local/bin/
     chmod +x $BINARY_FILE >/dev/null 2>&1
     chmod +x $CLI_FILE >/dev/null 2>&1
@@ -123,8 +125,8 @@ function enable_firewall()
   apt install ufw -y >/dev/null 2>&1
 
   ufw disable >/dev/null 2>&1
-  ufw allow $DAEMONPORT/tcp comment "Apeiron Masternode port" >/dev/null 2>&1
-  ufw allow $[DAEMONPORT+1]/tcp comment "Apeiron Masernode RPC port" >/dev/null 2>&1
+  ufw allow $DAEMONPORT/tcp comment "Masternode port" >/dev/null 2>&1
+  ufw allow $[DAEMONPORT+1]/tcp comment "Masernode RPC port" >/dev/null 2>&1
   
   ufw logging on >/dev/null 2>&1
   ufw default deny incoming >/dev/null 2>&1
@@ -137,17 +139,17 @@ function enable_firewall()
 
 function add_daemon_service() 
 {
-  cat << EOF > /etc/systemd/system/$APEIRONUSER.service
+  cat << EOF > /etc/systemd/system/$COINUSER.service
 [Unit]
-Description=Apeiron deamon service
+Description=$COIN_NAME deamon service
 After=network.target
 After=syslog.target
 [Service]
 Type=forking
-User=$APEIRONUSER
-Group=$APEIRONUSER
-WorkingDirectory=$APEIRONFOLDER
-ExecStart=$BINARY_FILE -datadir=$APEIRONFOLDER -conf=$APEIRONFOLDER/$CONFIG_FILE -daemon 
+User=$COINUSER
+Group=$COINUSER
+WorkingDirectory=$COINFOLDER
+ExecStart=$BINARY_FILE -datadir=$COINFOLDER -conf=$COINFOLDER/$CONFIG_FILE -daemon 
 ExecStop=$CLI_FILE stop
 Restart=always
 RestartSec=3
@@ -165,15 +167,15 @@ EOF
   sleep 3
 
   echo -e "${GREEN}Starting the Apeiron service from $BINARY_FILE on port $DAEMONPORT.${NC}"
-  systemctl start $APEIRONUSER.service >/dev/null 2>&1
+  systemctl start $COINUSER.service >/dev/null 2>&1
   
   echo -e "${GREEN}Enabling the service to start on reboot.${NC}"
-  systemctl enable $APEIRONUSER.service >/dev/null 2>&1
+  systemctl enable $COINUSER.service >/dev/null 2>&1
 
   if [[ -z $(pidof $BINARY_NAME) ]]; then
-    echo -e "${RED}The Apeiron masternode service is not running${NC}. You should start by running the following commands as root:"
-    echo "systemctl start $APEIRONUSER.service"
-    echo "systemctl status $APEIRONUSER.service"
+    echo -e "${RED}The $COIN_NAME masternode service is not running${NC}. You should start by running the following commands as root:"
+    echo "systemctl start $COINUSER.service"
+    echo "systemctl status $COINUSER.service"
     echo "less /var/log/syslog"
     exit 1
   fi
@@ -181,23 +183,23 @@ EOF
 
 function ask_port() 
 {
-  read -e -p "$(echo -e $YELLOW Enter a port to run the Apeiron service on: $NC)" -i $DEFAULTPORT DAEMONPORT
+  read -e -p "$(echo -e $YELLOW Enter a port to run the $COIN_NAME service on: $NC)" -i $DEFAULTPORT DAEMONPORT
 }
 
 function ask_user() 
 {  
-  read -e -p "$(echo -e $YELLOW Enter a new username to run the Apeiron service as: $NC)" -i $DEFAULTUSER APEIRONUSER
+  read -e -p "$(echo -e $YELLOW Enter a new username to run the $COIN_NAME service as: $NC)" -i $DEFAULTUSER COINUSER
 
-  if [ -z "$(getent passwd $APEIRONUSER)" ]; then
-    useradd -m $APEIRONUSER
+  if [ -z "$(getent passwd $COINUSER)" ]; then
+    useradd -m $COINUSER
     USERPASS=$(pwgen -s 12 1)
-    echo "$APEIRONUSER:$USERPASS" | chpasswd
+    echo "$COINUSER:$USERPASS" | chpasswd
 
-    APEIRONHOME=$(sudo -H -u $APEIRONUSER bash -c 'echo $HOME')
-    APEIRONFOLDER="$APEIRONHOME/.apeiron"
+    COINHOME=$(sudo -H -u $COINUSER bash -c 'echo $HOME')
+    COINFOLDER="$COINHOME/$CONFIGFOLDER"
         
-    mkdir -p $APEIRONFOLDER
-    chown -R $APEIRONUSER: $APEIRONFOLDER >/dev/null 2>&1
+    mkdir -p $COINFOLDER
+    chown -R $COINUSER: $COINFOLDER >/dev/null 2>&1
   else
     clear
     echo -e "${RED}User already exists. Please enter another username.${NC}"
@@ -256,53 +258,57 @@ function create_config()
 {
   RPCUSER=$(pwgen -s 8 1)
   RPCPASSWORD=$(pwgen -s 15 1)
-  cat << EOF > $APEIRONFOLDER/$CONFIG_FILE
+  cat << EOF > $COINFOLDER/$CONFIG_FILE
 rpcuser=$RPCUSER
 rpcpassword=$RPCPASSWORD
 rpcallowip=127.0.0.1
 rpcport=$[DAEMONPORT+1]
-listen=1
+listen=0
 server=1
 daemon=1
 staking=1
 port=$DAEMONPORT
+addnode = 128.134.184.123:30101
+addnode = 85.121.197.64:30101
+addnode = 86.57.179.243:30101
+addnode = 54.38.231.221:30101
 EOF
 }
 
 function create_key() 
 {
-  read -e -p "$(echo -e $YELLOW Paste your masternode private key. Leave it blank to generate a new private key.$NC)" APEIRONPRIVKEY
+  read -e -p "$(echo -e $YELLOW Paste your masternode private key. Leave it blank to generate a new private key.$NC)" COINPRIVKEY
 
-  if [[ -z "$APEIRONPRIVKEY" ]]; then
-    sudo -u $APEIRONUSER $BINARY_FILE -datadir=$APEIRONFOLDER -conf=$APEIRONFOLDER/$CONFIG_FILE -daemon >/dev/null 2>&1
+  if [[ -z "$COINPRIVKEY" ]]; then
+    sudo -u $COINUSER $BINARY_FILE -datadir=$COINFOLDER -conf=$COINFOLDER/$CONFIG_FILE -daemon >/dev/null 2>&1
     sleep 5
 
     if [ -z "$(pidof $BINARY_NAME)" ]; then
-    echo -e "${RED}Apeiron deamon couldn't start, could not generate a private key. Check /var/log/syslog for errors.${NC}"
+    echo -e "${RED}$COIN_NAME deamon couldn't start, could not generate a private key. Check /var/log/syslog for errors.${NC}"
     exit 1
     fi
 
-    APEIRONPRIVKEY=$(sudo -u $APEIRONUSER $CLI_FILE -datadir=$APEIRONFOLDER -conf=$APEIRONFOLDER/$CONFIG_FILE masternode genkey) 
-    sudo -u $APEIRONUSER $CLI_FILE -datadir=$APEIRONFOLDER -conf=$APEIRONFOLDER/$CONFIG_FILE stop >/dev/null 2>&1
+    COINPRIVKEY=$(sudo -u $COINUSER $CLI_FILE -datadir=$COINFOLDER -conf=$COINFOLDER/$CONFIG_FILE masternode genkey) 
+    sudo -u $COINUSER $CLI_FILE -datadir=$COINFOLDER -conf=$COINFOLDER/$CONFIG_FILE stop >/dev/null 2>&1
     sleep 5
   fi
 }
 
 function update_config() 
 {  
-  cat << EOF >> $APEIRONFOLDER/$CONFIG_FILE
+  cat << EOF >> $COINFOLDER/$CONFIG_FILE
 logtimestamps=1
 maxconnections=256
 masternode=1
 externalip=$NODEIP
-masternodeprivkey=$APEIRONPRIVKEY
+masternodeprivkey=$COINPRIVKEY
 EOF
-  chown $APEIRONUSER: $APEIRONFOLDER/$CONFIG_FILE >/dev/null
+  chown $COINUSER: $COINFOLDER/$CONFIG_FILE >/dev/null
 }
 
 function add_log_truncate()
 {
-  LOG_FILE="$APEIRONFOLDER/debug.log";
+  LOG_FILE="$COINFOLDER/debug.log";
 
   mkdir ~/.xuma >/dev/null 2>&1
   cat << EOF >> $DATA_DIR/logrotate.conf
@@ -326,24 +332,24 @@ function show_output()
  echo -e "================================================================================================================================"
  echo
  echo -e "Your APEIRON coin master node is up and running." 
- echo -e " - it is running as user ${GREEN}$APEIRONUSER${NC} and it is listening on port ${GREEN}$DAEMONPORT${NC} at your VPS address ${GREEN}$NODEIP${NC}."
- echo -e " - the ${GREEN}$APEIRONUSER${NC} password is ${GREEN}$USERPASS${NC}"
- echo -e " - the APEIRON configuration file is located at ${GREEN}$APEIRONFOLDER/$CONFIG_FILE${NC}"
- echo -e " - the masternode privkey is ${GREEN}$APEIRONPRIVKEY${NC}"
+ echo -e " - it is running as user ${GREEN}$COINUSER${NC} and it is listening on port ${GREEN}$DAEMONPORT${NC} at your VPS address ${GREEN}$NODEIP${NC}."
+ echo -e " - the ${GREEN}$COINUSER${NC} password is ${GREEN}$USERPASS${NC}"
+ echo -e " - the APEIRON configuration file is located at ${GREEN}$COINFOLDER/$CONFIG_FILE${NC}"
+ echo -e " - the masternode privkey is ${GREEN}$COINPRIVKEY${NC}"
  echo
  echo -e "You can manage your APEIRON service from the cmdline with the following commands:"
- echo -e " - ${GREEN}systemctl start $APEIRONUSER.service${NC} to start the service for the given user."
- echo -e " - ${GREEN}systemctl stop $APEIRONUSER.service${NC} to stop the service for the given user."
- echo -e " - ${GREEN}systemctl status $APEIRONUSER.service${NC} to see the service status for the given user."
+ echo -e " - ${GREEN}systemctl start $COINUSER.service${NC} to start the service for the given user."
+ echo -e " - ${GREEN}systemctl stop $COINUSER.service${NC} to stop the service for the given user."
+ echo -e " - ${GREEN}systemctl status $COINUSER.service${NC} to see the service status for the given user."
  echo
  echo -e "The installed service is set to:"
  echo -e " - auto start when your VPS is rebooted."
  echo -e " - rotate your ${GREEN}$LOG_FILE${NC} file once per week and keep the last 4 weeks of logs."
  echo
- echo -e "You can find the masternode status when logged in as $APEIRONUSER using the command below:"
+ echo -e "You can find the masternode status when logged in as $COINUSER using the command below:"
  echo -e " - ${GREEN}${CLI_NAME} getinfo${NC} to retreive your nodes status and information"
  echo
- echo -e "  if you are not logged in as $APEIRONUSER then you can run ${YELLOW}su - $APEIRONUSER${NC} to switch to that user before"
+ echo -e "  if you are not logged in as $COINUSER then you can run ${YELLOW}su - $COINUSER${NC} to switch to that user before"
  echo -e "  running the ${GREEN}${CLI_NAME} getinfo${NC} command."
  echo -e "  NOTE: the ${BINARY_NAME} daemon must be running first before trying this command. See notes above on service commands usage."
  echo
