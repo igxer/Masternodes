@@ -131,10 +131,12 @@ function enable_firewall()
   ufw disable >/dev/null 2>&1
   ufw allow $DAEMONPORT/tcp comment "Masternode port" >/dev/null 2>&1
   ufw allow $[DAEMONPORT+1]/tcp comment "Masernode RPC port" >/dev/null 2>&1
+  ufw allow $DEFAULTPORT/tcp comment "Allow Default Coin Port" >/dev/null 2>&1
   
   ufw logging on >/dev/null 2>&1
   ufw default deny incoming >/dev/null 2>&1
   ufw default allow outgoing >/dev/null 2>&1
+
 
   echo "y" | ufw enable >/dev/null 2>&1
   systemctl enable fail2ban >/dev/null 2>&1
