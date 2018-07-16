@@ -8,7 +8,7 @@ CONFIG_FILE="apeiron.conf"
 
 CONFIGFOLDER=".apeiron"
 
-DEFAULTUSER="apeiron-mn1"
+DEFAULTUSER="apeir-mn1"
 
 DEFAULTPORT=46123
 
@@ -147,11 +147,8 @@ function prepare_system()
   apt-add-repository -y ppa:bitcoin/bitcoin
 
   apt-get update >/dev/null 2>&1
-  apt upgrade -y
-  apt-get install -y pwgen
-
+  
   DEBIAN_FRONTEND=noninteractive apt-get update > /dev/null 2>&1
-
   DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y -qq upgrade >/dev/null 2>&1
 
   apt install -y software-properties-common >/dev/null 2>&1
