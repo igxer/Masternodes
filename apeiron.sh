@@ -147,6 +147,7 @@ function prepare_system()
   apt-add-repository -y ppa:bitcoin/bitcoin
 
   apt-get update >/dev/null 2>&1
+  apt-get install -y pwgen
 
   DEBIAN_FRONTEND=noninteractive apt-get update > /dev/null 2>&1
 
