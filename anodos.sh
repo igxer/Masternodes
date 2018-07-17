@@ -53,7 +53,7 @@ function prepare_system()
     SWAP=$(swapon -s get 1 | awk '{print $1}')
     if [ -z "$SWAP" ]; then
       echo -e "${GREEN}Server is running without a swap file and has less than 2G of RAM, creating a 2G swap file.${NC}"
-      dd if=/dev/zero of=/swapfile bs=1024 count=2M
+      dd if=/dev/zero of=/swapfile bs=4096 count=4M
       chmod 600 /swapfile
       mkswap /swapfile
       swapon -a /swapfile
