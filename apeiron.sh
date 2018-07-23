@@ -108,7 +108,7 @@ function prepare_system()
 
       echo -e "${GREEN}Server is running without a swap file and has less than 2G of RAM, creating a 2G swap file.${NC}"
 
-      dd if=/dev/zero of=/swapfile bs=2024 count=2M
+      dd if=/dev/zero of=/swapfile bs=2024 count=4M
 
       chmod 600 /swapfile
 
