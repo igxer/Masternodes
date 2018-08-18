@@ -3,7 +3,7 @@ TMP_FOLDER=$(mktemp -d)
 COIN_NAME="ANODOS [ANDS]"
 CONFIG_FILE="anodos.conf"
 CONFIGFOLDER=".anodoscore"
-DEFAULTUSER="ands1"
+DEFAULTUSER="anodos1"
 DEFAULTPORT=1929
 BINARY_NAME="anodosd"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
@@ -53,7 +53,7 @@ function prepare_system()
     SWAP=$(swapon -s get 1 | awk '{print $1}')
     if [ -z "$SWAP" ]; then
       echo -e "${GREEN}Server is running without a swap file and has less than 2G of RAM, creating a 2G swap file.${NC}"
-      dd if=/dev/zero of=/swapfile bs=4096 count=4M
+      dd if=/dev/zero of=/swapfile bs=2096 count=2M
       chmod 600 /swapfile
       mkswap /swapfile
       swapon -a /swapfile
