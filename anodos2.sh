@@ -1,13 +1,13 @@
 #!/bin/bash
 TMP_FOLDER=$(mktemp -d)
 COIN_NAME="ANODOS [ANDS]"
-CONFIG_FILE="ans.conf"
-CONFIGFOLDER=".ans"
+CONFIG_FILE="anodos.conf"
+CONFIGFOLDER=".anodoscore"
 DEFAULTUSER="ands1"
-DEFAULTPORT=30101
+DEFAULTPORT=1929
 BINARY_NAME="anodosd"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
-CLI_NAME="ans-cli"
+CLI_NAME="anodos-cli"
 CLI_FILE="/usr/local/bin/$CLI_NAME"
 COIN_TGZ="https://github.com/AnodosCore/AnodosCore/releases/download/V2.0/Anodos-Linux.zip"
 COIN_ZIP='Anodos-Linux.zip'
