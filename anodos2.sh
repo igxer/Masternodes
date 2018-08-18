@@ -3,20 +3,20 @@ TMP_FOLDER=$(mktemp -d)
 COIN_NAME="ANODOS [ANDS]"
 CONFIG_FILE="ans.conf"
 CONFIGFOLDER=".ans"
-DEFAULTUSER="ans-mn1"
+DEFAULTUSER="ands1"
 DEFAULTPORT=30101
-BINARY_NAME="ansd"
+BINARY_NAME="anodosd"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
 CLI_NAME="ans-cli"
 CLI_FILE="/usr/local/bin/$CLI_NAME"
 COIN_TGZ="https://github.com/AnodosCore/AnodosCore/releases/download/V2.0/Anodos-Linux.zip"
-COIN_ZIP='ans-linux.tar.gz'
-GITHUB_REPO="https://github.com/anodoscoin/anodoscoin"
-ADDNODE01="addnode = 128.134.184.123:30101"
-ADDNODE02="addnode = 85.121.197.64:30101"
-ADDNODE03="addnode = 86.57.179.243:30101"
-ADDNODE04="addnode = 54.38.231.221:30101"
-ADDNODE05=""
+COIN_ZIP='Anodos-Linux.zip'
+GITHUB_REPO="https://github.com/AnodosCore/AnodosCore"
+ADDNODE01="addnode = 80.211.130.203:1929"
+ADDNODE02="addnode = 167.99.74.56:1929"
+ADDNODE03="addnode = 149.28.22.242:1929"
+ADDNODE04="addnode = 95.179.147.57:1929"
+ADDNODE05="addnode = 138.197.182.21:1929"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -77,11 +77,13 @@ function prepare_system()
   DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y -qq upgrade >/dev/null 2>&1
   apt install -y software-properties-common >/dev/null 2>&1
   apt-add-repository -y ppa:bitcoin/bitcoin >/dev/null 2>&1
+  echo -e "${GREEN}Installing required packages. ${RED}Not much longer now!${NC}"
   apt-get update >/dev/null 2>&1
-  apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
-  build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
-  libboost-system-dev libboost-test-dev libboost-thread-dev sudo automake git wget curl libdb4.8-dev bsdmainutils libdb4.8++-dev \
-  libminiupnpc-dev libgmp3-dev ufw pkg-config libevent-dev  libdb5.3++ libzmq5 unzip>/dev/null 2>&1
+apt-get install libzmq3-dev -y >/dev/null 2>&1
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
+build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
+libboost-system-dev libboost-test-dev libboost-thread-dev sudo automake git wget curl libdb4.8-dev bsdmainutils libdb4.8++-dev \
+libminiupnpc-dev libgmp3-dev ufw pkg-config libevent-dev  libdb5.3++ unzip libzmq5 >/dev/null 2>&1
 
   clear
   
@@ -112,7 +114,7 @@ function deploy_binary()
     echo -e "${GREEN}Downloading $COIN_ZIP and deploying the $COIN_NAME service.${NC}"
     wget $COIN_TGZ -O $COIN_ZIP.zip >/dev/null 2>&1
 
-    tar xvzf $COIN_ZIP.zip >/dev/null 2>&1
+    unzip $COIN_ZIP.zip >/dev/null 2>&1
     cp $BINARY_NAME $CLI_NAME /usr/local/bin/
     chmod +x $BINARY_FILE >/dev/null 2>&1
     chmod +x $CLI_FILE >/dev/null 2>&1
