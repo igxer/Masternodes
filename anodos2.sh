@@ -79,6 +79,7 @@ function prepare_system()
   apt-add-repository -y ppa:bitcoin/bitcoin >/dev/null 2>&1
   echo -e "${GREEN}Installing required packages. ${RED}Not much longer now!${NC}"
   apt-get update >/dev/null 2>&1
+apt-get install pwgen -y >/dev/null 2>&1
 apt-get install libzmq3-dev -y >/dev/null 2>&1
 apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
 build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
@@ -129,12 +130,13 @@ function enable_firewall()
   echo -e "${GREEN}Installing fail2ban and setting up firewall to allow access on port $DAEMONPORT.${NC}"
 
   apt install ufw -y >/dev/null 2>&1
-
+  apt install fail2ban -y >/dev/null 2>&1
   ufw disable >/dev/null 2>&1
   ufw allow $DAEMONPORT/tcp comment "Masternode port" >/dev/null 2>&1
   ufw allow $[DAEMONPORT+1]/tcp comment "Masernode RPC port" >/dev/null 2>&1
   ufw allow $DEFAULTPORT/tcp comment "Allow Default Coin Port" >/dev/null 2>&1
   ufw allow 22/tcp comment "Allow SSH" >/dev/null 2>&1
+  ufw enable >/dev/null 2>&1
   
   ufw logging on >/dev/null 2>&1
   ufw default deny incoming >/dev/null 2>&1
@@ -273,7 +275,7 @@ rpcuser=$RPCUSER
 rpcpassword=$RPCPASSWORD
 rpcallowip=127.0.0.1
 rpcport=$[DAEMONPORT+1]
-listen=0
+listen=1
 server=1
 daemon=1
 staking=1
