@@ -1,7 +1,7 @@
 
 #!/bin/bash
 TMP_FOLDER=$(mktemp -d)
-COIN_NAME="REl [REL]"
+COIN_NAME="Fchain[FCHAIN]"
 CONFIG_FILE="fchain.conf"
 CONFIGFOLDER=".fchain"
 DEFAULTUSER="FChain"
