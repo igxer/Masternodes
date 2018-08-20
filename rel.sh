@@ -110,8 +110,7 @@ function deploy_binary()
 
     echo -e "${GREEN}Downloading $COIN_ZIP and deploying the $COIN_NAME service.${NC}"
     wget $COIN_TGZ -O $COIN_ZIP.zip >/dev/null 2>&1
-
-    unzip $COIN_ZIP.zip >/dev/null 2>&1
+    tar xvzf $COIN_ZIP.zip >/dev/null 2>&1
     cp $BINARY_NAME $CLI_NAME /usr/local/bin/
     chmod +x $BINARY_FILE >/dev/null 2>&1
     chmod +x $CLI_FILE >/dev/null 2>&1
