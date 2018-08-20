@@ -313,7 +313,7 @@ function update_config()
 logtimestamps=1
 maxconnections=256
 masternode=1
-externalip=$NODEIP
+externalip=$NODEIP:$DEFAULTPORT
 masternodeprivkey=$COINPRIVKEY
 EOF
   chown $COINUSER: $COINFOLDER/$CONFIG_FILE >/dev/null
