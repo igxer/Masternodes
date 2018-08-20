@@ -12,7 +12,7 @@ CLI_NAME="fchain-cli"
 CLI_FILE="/usr/local/bin/$CLI_NAME"
 COIN_TGZ="https://github.com/foundchain/FCHAIN/releases/download/1.0.0/fchain-1.0.0-x86_64-linux-gnu.tar.gz"
 COIN_ZIP='fchain-1.0.0-x86_64-linux-gnu.tar.gz'
-GITHUB_REPO="https://github.com/zoldur/Reliance"
+GITHUB_REPO="https://github.com/foundchain/FCHAIN/"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -122,20 +122,11 @@ function deploy_binary()
 
 function enable_firewall() 
 {
-  echo -e "${GREEN}Installing fail2ban and setting up firewall to allow access on port $DAEMONPORT.${NC}"
-
-  apt install ufw -y >/dev/null 2>&1
-  ufw disable >/dev/null 2>&1
+  echo -e "${GREEN}Setting up firewall to allow access on port $DAEMONPORT.${NC}"
   ufw allow $DAEMONPORT/tcp comment "Masternode port" >/dev/null 2>&1
   ufw allow $[DAEMONPORT+1]/tcp comment "Masernode RPC port" >/dev/null 2>&1
   ufw allow $DEFAULTPORT/tcp comment "Allow Default Coin Port" >/dev/null 2>&1
   ufw allow 22/tcp comment "Allow SSH" >/dev/null 2>&1
-  ufw enable >/dev/null 2>&1
-  
-  ufw logging on >/dev/null 2>&1
-  ufw default deny incoming >/dev/null 2>&1
-  ufw default allow outgoing >/dev/null 2>&1
-
 }
 
 function add_daemon_service() 
@@ -167,7 +158,7 @@ EOF
   systemctl daemon-reload
   sleep 3
 
-  echo -e "${GREEN}Starting the Apeiron service from $BINARY_FILE on port $DAEMONPORT.${NC}"
+  echo -e "${GREEN}Starting the $COIN_NAME service from $BINARY_FILE on port $DAEMONPORT.${NC}"
   systemctl start $COINUSER.service >/dev/null 2>&1
   
   echo -e "${GREEN}Enabling the service to start on reboot.${NC}"
@@ -334,13 +325,13 @@ function show_output()
  echo
  echo -e "================================================================================================================================"
  echo
- echo -e "Your APEIRON coin master node is up and running." 
+ echo -e "Your $COIN_NAME master node is up and running." 
  echo -e " - it is running as user ${GREEN}$COINUSER${NC} and it is listening on port ${GREEN}$DAEMONPORT${NC} at your VPS address ${GREEN}$NODEIP${NC}."
  echo -e " - the ${GREEN}$COINUSER${NC} password is ${GREEN}$USERPASS${NC}"
- echo -e " - the APEIRON configuration file is located at ${GREEN}$COINFOLDER/$CONFIG_FILE${NC}"
+ echo -e " - the $COIN_NAME configuration file is located at ${GREEN}$COINFOLDER/$CONFIG_FILE${NC}"
  echo -e " - the masternode privkey is ${GREEN}$COINPRIVKEY${NC}"
  echo
- echo -e "You can manage your APEIRON service from the cmdline with the following commands:"
+ echo -e "You can manage your $COIN_NAME service from the cmdline with the following commands:"
  echo -e " - ${GREEN}systemctl start $COINUSER.service${NC} to start the service for the given user."
  echo -e " - ${GREEN}systemctl stop $COINUSER.service${NC} to stop the service for the given user."
  echo -e " - ${GREEN}systemctl status $COINUSER.service${NC} to see the service status for the given user."
@@ -385,7 +376,7 @@ echo -e "This script will automate the installation of your $COIN_NAME coin mast
 echo -e "performing the following steps:"
 echo
 echo -e " - Prepare your system with the required dependencies"
-echo -e " - Obtain the latest Apeiron masternode files from the $COIN_NAME  GitHub repository"
+echo -e " - Obtain the latest $COIN_NAME masternode files from the $COIN_NAME  GitHub repository"
 echo -e " - Create a user and password to run the $COIN_NAME masternode service"
 echo -e " - Install the $COIN_NAME  masternode service under the new user [not root]"
 echo -e " - Add DDoS protection using fail2ban"
