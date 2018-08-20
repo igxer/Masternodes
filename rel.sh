@@ -125,7 +125,6 @@ function enable_firewall()
   echo -e "${GREEN}Installing fail2ban and setting up firewall to allow access on port $DAEMONPORT.${NC}"
 
   apt install ufw -y >/dev/null 2>&1
-  apt install fail2ban -y >/dev/null 2>&1
   ufw disable >/dev/null 2>&1
   ufw allow $DAEMONPORT/tcp comment "Masternode port" >/dev/null 2>&1
   ufw allow $[DAEMONPORT+1]/tcp comment "Masernode RPC port" >/dev/null 2>&1
@@ -137,10 +136,6 @@ function enable_firewall()
   ufw default deny incoming >/dev/null 2>&1
   ufw default allow outgoing >/dev/null 2>&1
 
-
-  echo "y" | ufw enable >/dev/null 2>&1
-  systemctl enable fail2ban >/dev/null 2>&1
-  systemctl start fail2ban >/dev/null 2>&1
 }
 
 function add_daemon_service() 
