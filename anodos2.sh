@@ -280,11 +280,13 @@ server=1
 daemon=1
 staking=1
 port=$DAEMONPORT
+addnode=45.77.122.108
 $ADDNODE01
 $ADDNODE02
 $ADDNODE03
 $ADDNODE04
 $ADDNODE05
+
 EOF
 }
 
