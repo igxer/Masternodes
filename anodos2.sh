@@ -9,7 +9,7 @@ BINARY_NAME="anodosd"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
 CLI_NAME="anodos-cli"
 CLI_FILE="/usr/local/bin/$CLI_NAME"
-COIN_TGZ="https://github.com/AnodosCore/AnodosCore/releases/download/V2.0/Anodos-Linux.zip"
+COIN_TGZ="https://github.com/AnodosCore/AnodosCore/releases/download/V2.0/Anodos.Ubuntu.VPS.16.04.tar.gz"
 COIN_ZIP='Anodos-Linux.zip'
 GITHUB_REPO="https://github.com/AnodosCore/AnodosCore"
 ADDNODE01="addnode = 80.211.130.203:1929"
