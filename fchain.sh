@@ -4,7 +4,7 @@ TMP_FOLDER=$(mktemp -d)
 COIN_NAME="Fchain[FCHAIN]"
 CONFIG_FILE="fchain.conf"
 CONFIGFOLDER=".fchain"
-DEFAULTUSER="FChain"
+DEFAULTUSER="f"
 DEFAULTPORT=6565
 BINARY_NAME="fchaind"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
@@ -293,7 +293,7 @@ function update_config()
 {  
   cat << EOF >> $COINFOLDER/$CONFIG_FILE
 logtimestamps=1
-maxconnections=256
+maxconnections=12
 masternode=1
 externalip=$NODEIP:$DEFAULTPORT
 masternodeprivkey=$COINPRIVKEY
