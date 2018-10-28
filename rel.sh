@@ -4,7 +4,7 @@ TMP_FOLDER=$(mktemp -d)
 COIN_NAME="REl [REL]"
 CONFIG_FILE="Rel.conf"
 CONFIGFOLDER=".RelMN"
-DEFAULTUSER="RelMN1"
+DEFAULTUSER="R"
 DEFAULTPORT=43210
 BINARY_NAME="Reld"
 BINARY_FILE="/usr/local/bin/$BINARY_NAME"
@@ -125,16 +125,11 @@ function enable_firewall()
   echo -e "${GREEN}Installing fail2ban and setting up firewall to allow access on port $DAEMONPORT.${NC}"
 
   apt install ufw -y >/dev/null 2>&1
-  ufw disable >/dev/null 2>&1
+
   ufw allow $DAEMONPORT/tcp comment "Masternode port" >/dev/null 2>&1
   ufw allow $[DAEMONPORT+1]/tcp comment "Masernode RPC port" >/dev/null 2>&1
   ufw allow $DEFAULTPORT/tcp comment "Allow Default Coin Port" >/dev/null 2>&1
-  ufw allow 22/tcp comment "Allow SSH" >/dev/null 2>&1
-  ufw enable >/dev/null 2>&1
-  
-  ufw logging on >/dev/null 2>&1
-  ufw default deny incoming >/dev/null 2>&1
-  ufw default allow outgoing >/dev/null 2>&1
+ 
 
 }
 
