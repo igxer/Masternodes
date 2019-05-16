@@ -21,10 +21,10 @@ NC='\033[0m'
 
 function checks() 
 {
-  #if [[ $(lsb_release -d) != *16.04* ]]; then
-   # echo -e "${RED}You are not running Ubuntu 16.04. Installation is cancelled.${NC}"
-    #exit 1
- # fi
+  if [[ $(lsb_release -d) != *19.04* ]]; then
+    echo -e "${RED}You are not running Ubuntu 19.04. Installation is cancelled.${NC}"
+    exit 1
+  fi
 
   if [[ $EUID -ne 0 ]]; then
      echo -e "${RED}$0 must be run as root.${NC}"
@@ -75,12 +75,12 @@ function prepare_system()
   apt-add-repository -y ppa:bitcoin/bitcoin >/dev/null 2>&1
   echo -e "${GREEN}Installing required packages. ${RED}Not much longer now!${NC}"
   apt-get update >/dev/null 2>&1
-apt-get install pwgen -y >/dev/null 2>&1
-apt-get install libzmq3-dev -y >/dev/null 2>&1
-apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
-build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
-libboost-system-dev libboost-test-dev libboost-thread-dev sudo automake git wget curl libdb4.8-dev bsdmainutils libdb4.8++-dev \
-libminiupnpc-dev libgmp3-dev ufw pkg-config libevent-dev  libdb5.3++ unzip >/dev/null 2>&1
+#apt-get install pwgen -y >/dev/null 2>&1
+#apt-get install libzmq3-dev -y >/dev/null 2>&1
+#apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" make software-properties-common \
+#build-essential libtool autoconf libssl-dev libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
+#libboost-system-dev libboost-test-dev libboost-thread-dev sudo automake git wget curl libdb4.8-dev bsdmainutils libdb4.8++-dev \
+#libminiupnpc-dev libgmp3-dev ufw pkg-config libevent-dev  libdb5.3++ unzip >/dev/null 2>&1
 
   clear
   
